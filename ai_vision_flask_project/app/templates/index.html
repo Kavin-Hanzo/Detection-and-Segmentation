@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Vision Processing</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #e0eafc, #cfdef3);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .container:hover {
+            transform: scale(1.02);
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .video-container {
+            margin: 20px 0;
+            border: 4px solid #2980b9;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+
+        .video-container:hover {
+            border-color: #3498db;
+        }
+
+        #video-feed {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        button {
+            padding: 12px 25px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        input, label {
+            display: block;
+            margin: 10px 0;
+            font-size: 1em;
+        }
+
+        .mobile-camera {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hanzo's Vision</h1>
+
+        <div class="video-container">
+            <img id="video-feed" src="{{ url_for('video_feed') }}" alt="connect to IP address">
+        </div>
+
+        <div class="controls">
+            <div class="buttons">
+                <button onclick="changeMode('object_detection')">Object Detection</button>
+                <button onclick="changeMode('semantic_segmentation')">Semantic Segmentation</button>
+            </div>
+            <div class="mobile-camera">
+                <h3>Use Mobile Camera</h3>
+                <label for="mobile-camera-url">Enter Mobile Camera Stream URL:</label>
+                <input type="text" id="mobile-camera-url" placeholder="http://ip:port/video"><br>
+                <button onclick="useMobileCamera()">Switch to Mobile Camera</button>
+                <p>Enter 0 to go back to default camera</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function changeMode(mode) {
+            fetch(`/change_mode/${mode}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        console.log(`Mode changed to ${mode}`);
+                    }
+                });
+        }
+
+        function changeCamera(cameraSource) {
+            if (cameraSource) {
+                fetch(`/change_camera/${encodeURIComponent(cameraSource)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === "success") {
+                            console.log(`Camera source changed to ${cameraSource}`);
+                        }
+                    });
+            }
+        }
+
+        function useMobileCamera() {
+            const mobileCameraUrl = document.getElementById('mobile-camera-url').value;
+            if (mobileCameraUrl) {
+                changeCamera(encodeURIComponent(mobileCameraUrl));
+                console.log(`Switching to mobile camera at ${mobileCameraUrl}`);
+                alert("Camera switch successful, refresh to load.");
+            } else {
+                alert('Please enter a valid mobile camera URL.');
+            }
+        }
+    </script>
+</body>
+</html>
