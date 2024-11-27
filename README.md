@@ -1,4 +1,4 @@
-# **AI Vision Processing with Real-Time Detection and Segmentation**
+# **Real-Time Detection and Segmentation**
 
 This project demonstrates a Flask-based web application for real-time **Object Detection** and **Semantic Segmentation** using live video streams. It supports two video sources:
 
@@ -60,8 +60,8 @@ The app dynamically switches between these video sources and modes, making it an
 - View the live video stream with object detection or segmentation applied in real time.  
 
 
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
+`python -m venv venv`
+`source venv/bin/activate  # On Windows: venv\Scripts\activate`
+`pip install -r requirements.txt`
 
-python run.py
+`python run.py`
